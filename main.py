@@ -1,5 +1,6 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebEngineWidgets import *
 import sys
 
 
@@ -9,16 +10,32 @@ class Wnd(QMainWindow):
         self.initUi()
 
     def initUi(self):
-        self.setGeometry(200, 200, 1200, 1200)
-        self.lbl = QLabel(self)
-        self.lbl.resize(150, 100)
-        self.lbl.move(100, 100)
-        self.lbl.setText("asdasd");
-        self.setWindowFlag(Qt.WindowFullScreen)
+        self.setGeometry(100, 100, 500, 500)
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setMouseTracking(True)
 
-    def keyPressEvent(self, event):
-            if(event.key() == Qt.Key_F):
-                self.lbl.setText("nnnnnnnnnnnnnnnnnnn")
+        self.shadow = QGraphicsDropShadowEffect(self)
+        self.shadow.setBlurRadius(10)
+        self.shadow.setOffset(0)
+        self.setGraphicsEffect(self.shadow)
+
+
+        self.wW = QWebEngineView(self)
+        self.wW.setGeometry(100, 100, 300, 300)
+        self.url = QUrl("https://evileg.com/ru/forum/topic/623/")
+        self.wW.load(self.url)
+        self.wW.show()
+
+        self.wW.close = QPushButton(self)
+        self.wW.close.resize(20, 20)
+        self.wW.close.move(380, 100)
+        self.wW.close.setText("X")
+        self.wW.close.clicked.connect(self.close)
+
+    def mouseMoveEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            pass
 
 
 if __name__ == "__main__":
