@@ -1,26 +1,29 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtWebEngineWidgets import *
+from views import StyleSheethHelper
 
 
 class Ui_BackgroundForm(object):
     def setupUi(self, BackgroundForm):
-        BackgroundForm.setWindowFlags(Qt.CustomizeWindowHint)
+        BackgroundForm.setWindowFlags(Qt.FramelessWindowHint)
         BackgroundForm.setObjectName("BackgroundForm")
         BackgroundForm.resize(1074, 782)
         BackgroundForm.setMouseTracking(True)
-        self.gridLayout_3 = QGridLayout(BackgroundForm)
-        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout_3.setSpacing(3)
-        self.gridLayout_3.setObjectName("gridLayout_3")
+        BackgroundForm.setAttribute(Qt.WA_TranslucentBackground, True);
+        self.backgroundFormLayout = QGridLayout(BackgroundForm)
+        self.backgroundFormLayout.setContentsMargins(0, 0, 0, 0)
+        self.backgroundFormLayout.setSpacing(3)
+        self.backgroundFormLayout.setObjectName("backgroundFormLayout")
         self.Form = QWidget(BackgroundForm)
         self.Form.setMouseTracking(False)
-        self.Form.setStyleSheet("QWidget {\n"
-                                "background-color: white;\n"
-                                "}")
+        self.Form.setStyleSheet(StyleSheethHelper.formFormStyleSheet_normal)
         self.Form.setObjectName("Form")
-        self.gridLayout_2 = QGridLayout(self.Form)
-        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.formLayout = QGridLayout(self.Form)
+        self.formLayout.setObjectName("formLayout")
+        self.formLayout.setContentsMargins(0, 0, 0, 0)
+        self.formLayout.setSpacing(0)
         self.headerLayout = QHBoxLayout()
         self.headerLayout.setObjectName("headerLayout")
         self.btnQtMenu = QPushButton(self.Form)
@@ -35,14 +38,7 @@ class Ui_BackgroundForm(object):
         font.setStrikeOut(False)
         font.setKerning(True)
         self.btnQtMenu.setFont(font)
-        self.btnQtMenu.setStyleSheet("QPushButton {\n"
-                                     "background-color: #40CD52;\n"
-                                     "color: white;\n"
-                                     "border: none;\n"
-                                     "border-radius: 0px;\n"
-                                     "border-top-left-radius: 15px;\n"
-                                     "border-bottom-right-radius: 15px;\n"
-                                     "}")
+        self.btnQtMenu.setStyleSheet(StyleSheethHelper.btnQtMenuStyleSheet_normal)
         self.btnQtMenu.setIcon(QIcon("./static/images/menu.png"))
         self.btnQtMenu.setObjectName("btnQtMenu")
         self.headerLayout.addWidget(self.btnQtMenu)
@@ -53,26 +49,19 @@ class Ui_BackgroundForm(object):
         self.closeMinMaxLayout.setSpacing(10)
         self.closeMinMaxLayout.setObjectName("closeMinMaxLayout")
         self.btnMinimize = QPushButton(self.Form)
-        self.btnMinimize.setMinimumSize(QSize(15, 15))
         self.btnMinimize.setMaximumSize(QSize(15, 15))
-        self.btnMinimize.setStyleSheet("QPushButton {\n"
-                                       "border: none;\n"
-                                       "color: white;\n"
-                                       "background-color: #BABABA;\n"
-                                       "border-radius: 7px;\n"
-                                       "}")
+        self.btnMinimize.setStyleSheet(StyleSheethHelper.btnMinimizeStyleSheet_normal)
         self.btnMinimize.setText("")
         self.btnMinimize.setObjectName("btnMinimize")
         self.closeMinMaxLayout.addWidget(self.btnMinimize)
         self.btnMaximize = QPushButton(self.Form)
         self.btnMaximize.setMinimumSize(QSize(15, 15))
         self.btnMaximize.setMaximumSize(QSize(15, 15))
-        self.btnMaximize.setStyleSheet("QPushButton {\n"
-                                       "border: none;\n"
-                                       "color: white;\n"
-                                       "border-radius: 7px;\n"
-                                       "background-color: #BABABA;\n"
-                                       "}")
+        self.btnMaximize.setStyleSheet(StyleSheethHelper.btnMaximizeStyleSheet_normal)
+        self.btnMaximize.setIcon(QIcon("./static/images/maximize.png"))
+        self.btnMaximize.setIconSize(QSize(15, 15))
+        self.btnMinimize.setIcon(QIcon("./static/images/minus.png"))
+        self.btnMinimize.setIconSize(QSize(15, 15))
         self.btnMaximize.setText("")
         self.btnMaximize.setObjectName("btnMaximize")
         self.closeMinMaxLayout.addWidget(self.btnMaximize)
@@ -80,33 +69,27 @@ class Ui_BackgroundForm(object):
         self.btnClose.setMinimumSize(QSize(15, 15))
         self.btnClose.setMaximumSize(QSize(15, 15))
         self.btnClose.setAccessibleDescription("")
-        self.btnClose.setStyleSheet("QPushButton {\n"
-                                    "border: none;\n"
-                                    "color: white;\n"
-                                    "background-color: #e74c3c;\n"
-                                    "border-radius: 7px;\n"
-                                    "}")
+        self.btnClose.setStyleSheet(StyleSheethHelper.btnCloseStyleSheet_normal)
         self.btnClose.setText("")
+        self.btnClose.setIcon(QIcon("./static/images/close.png"))
+        self.btnClose.setIconSize(QSize(15, 15))
         self.btnClose.setObjectName("btnClose")
         self.closeMinMaxLayout.addWidget(self.btnClose)
         self.headerLayout.addLayout(self.closeMinMaxLayout)
-        self.gridLayout_2.addLayout(self.headerLayout, 0, 0, 1, 1)
-        self.plainTextEdit = QPlainTextEdit(self.Form)
-        self.plainTextEdit.setStyleSheet("QPlainTextEdit\n"
-                                         "{\n"
-                                         "background-color: #F0F5F8;\n"
-                                         "outline: none;\n"
-                                         "border-radius: 0px;\n"
-                                         "}")
-        self.plainTextEdit.setObjectName("plainTextEdit")
-        self.plainTextEdit.setFont(QFont("Montserrat", 12))
-        self.gridLayout_2.addWidget(self.plainTextEdit, 1, 0, 1, 1)
-        self.gridLayout_3.addWidget(self.Form, 0, 0, 1, 1)
+        self.formLayout.addLayout(self.headerLayout, 0, 0, 1, 1)
+
+        self.webview = QWebEngineView(self.Form)
+        self.webview.setObjectName("webview")
+        self.webview.load(self.url)
+        self.webview.show()
+
+        self.formLayout.addWidget(self.webview, 1, 0, 1, 1)
+        self.backgroundFormLayout.addWidget(self.Form, 0, 0, 1, 1)
 
         self.retranslateUi(BackgroundForm)
         QMetaObject.connectSlotsByName(BackgroundForm)
 
     def retranslateUi(self, BackgroundForm):
         _translate = QCoreApplication.translate
-        BackgroundForm.setWindowTitle(_translate("BackgroundForm", "QtCodeEditor"))
-        self.btnQtMenu.setText(_translate("BackgroundForm", "QtCodeEditor"))
+        BackgroundForm.setWindowTitle(_translate("BackgroundForm", "QtBrowser"))
+        self.btnQtMenu.setText(_translate("BackgroundForm", "QtBrowser"))
