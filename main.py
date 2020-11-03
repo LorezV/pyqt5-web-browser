@@ -1,41 +1,46 @@
-from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtCore import Qt, QUrl, QPoint
 from PyQt5.QtWidgets import *
-from PyQt5.QtWebEngineWidgets import *
+from PyQt5.QtGui import QIcon
+from views.QTBrowserWindow import Ui_BackgroundForm
 import sys
+import os
+
+print(os.getcwd())
 
 
-class Wnd(QMainWindow):
+class Wnd(QWidget, Ui_BackgroundForm):
     def __init__(self):
         super().__init__()
-        self.initUi()
 
-    def initUi(self):
-        self.setGeometry(100, 100, 500, 500)
-        self.setWindowFlag(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setMouseTracking(True)
+        self.is_pressed = False
+        self.old_pos = QPoint(0, 0)
 
-        self.shadow = QGraphicsDropShadowEffect(self)
-        self.shadow.setBlurRadius(10)
-        self.shadow.setOffset(0)
-        self.setGraphicsEffect(self.shadow)
+        self.setupUi(self)
+        self.setWindowIcon(QIcon("./static/images/menu.png"))
+        self.btnClose.clicked.connect(self.close)
+        self.btnMinimize.clicked.connect(self.showMinimized)
+        self.btnMaximize.clicked.connect(self.btnMaximizeController)
 
-
-        self.wW = QWebEngineView(self)
-        self.wW.setGeometry(100, 100, 300, 300)
-        self.url = QUrl("https://evileg.com/ru/forum/topic/623/")
-        self.wW.load(self.url)
-        self.wW.show()
-
-        self.wW.close = QPushButton(self)
-        self.wW.close.resize(20, 20)
-        self.wW.close.move(380, 100)
-        self.wW.close.setText("X")
-        self.wW.close.clicked.connect(self.close)
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.is_pressed = True
+            self.old_pos = event.globalPos()
 
     def mouseMoveEvent(self, event):
+        if self.is_pressed:
+            delta = QPoint(event.globalPos() - self.old_pos)
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.old_pos = event.globalPos()
+
+    def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
-            pass
+            self.is_pressed = False
+
+    def btnMaximizeController(self):
+        if self.isMaximized():
+            self.showNormal()
+            return
+        self.showMaximized()
 
 
 if __name__ == "__main__":
