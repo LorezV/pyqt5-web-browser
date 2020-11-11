@@ -1,29 +1,34 @@
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QIcon
+from modules.BrowserTab import BrowserTab
 
 
-class BrowserButton(QPushButton):
-    def __init__(self, widget, bText, bSize, bIcon=None, bStylesheet=None, bIconSize=None):
-        super().__init__()
+class ActionButton(QPushButton):
+    def __init__(self, widget, b_text, b_icon, b_stylesheet):
+        super().__init__(widget)
 
-        self.bText = bText
-        self.bSize = bSize
-        self.bIcon = bIcon
-        self.bStylesheet = bStylesheet
-        self.bIconSize = bIconSize
+        self.widget = widget
+        self.bText = b_text
+        self.bIcon = b_icon
+        self.bStylesheet = b_stylesheet
 
-        self.setupUi()
+        self.setup_ui()
 
-    def setupUi(self):
+    def setup_ui(self):
         self.setText(self.bText)
-        self.setFixedSize(self.bSize)
+        self.setIcon(self.bIcon)
+        self.setFixedSize(QSize(30, 30))
+        self.setIconSize(QSize(15, 15))
+        self.setStyleSheet(self.bStylesheet)
 
-        if self.bIconSize is not None:
-            self.setIconSize(self.bIconSize)
 
-        if self.bStylesheet is not None:
-            self.setStyleSheet(self.bStylesheet)
+class ActionAddTabButton(ActionButton):
+    def __init__(self, widget, b_text, b_icon, b_stylesheet):
+        super().__init__(widget, b_text, b_icon, b_stylesheet)
+        self.clicked.connect(self.create_tab)
 
-        if self.bIcon is not None:
-            self.setIcon(self.bIcon)
+    def create_tab(self):
+        try:
+            BrowserTab(self.widget, self.widget.webview, self.widget.tabsLayout).set_tab()
+        except AssertionError:
+            print("Максимальное кол-во вкладок!")
