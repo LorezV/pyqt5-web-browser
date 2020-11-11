@@ -2,7 +2,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
-from views import StyleSheethHelper
+from modules import StyleSheethHelper
+from modules.ActionButton import ActionButton, ActionAddTabButton
+from modules.WindowButton import WindowButton, WindowButtonClose, WindowButtonMinimize, WindowButtonMaximize
+from modules.MainButton import MainButton
+from modules.HistoryWidget import HistoryWidget
+import sqlite3
 
 
 class Ui_BackgroundForm(object):
@@ -34,7 +39,6 @@ class Ui_BackgroundForm(object):
         self.Form.setObjectName("Form")
         # endregion
         # endregion
-
         # region Creating layouts ...
         # region Creating background layout
         self.backgroundFormLayout = QGridLayout(BackgroundForm)
@@ -51,6 +55,7 @@ class Ui_BackgroundForm(object):
         # region Creating header layout
         self.headerLayout = QHBoxLayout()
         self.headerLayout.setObjectName("headerLayout")
+        self.tabsLayout = QHBoxLayout()
         # endregion
         # region Creating layout for header buttons "close, maximize, minimize"
         self.closeMinMaxLayout = QHBoxLayout()
@@ -64,70 +69,47 @@ class Ui_BackgroundForm(object):
         self.searchLayout.setContentsMargins(0, 0, 0, 6)
         self.searchLayout.setSpacing(0)
         # endregion
+        # region Creating search area layout
+        self.goBackForwardLayout = QHBoxLayout()
+        self.goBackForwardLayout.setObjectName("goBackForwardLayout")
+        self.goBackForwardLayout.setContentsMargins(0, 0, 0, 0)
+        self.goBackForwardLayout.setSpacing(0)
         # endregion
-
+        # endregion
+        self.db = sqlite3.connect("qtbrowser.db")
+        self.cur = self.db.cursor()
         # region Creating widgets ...
+        self.webview = QWebEngineView(self.Form)
+        self.webview.show()
+        self.historyWidget = HistoryWidget(BackgroundForm, self.webview, self.tabsLayout)
         # region Creating main menu button
-        self.btnQtMenu = QPushButton(self.Form)
-        self.btnQtMenu.setMinimumSize(QSize(150, 30))
-        self.btnQtMenu.setMaximumSize(QSize(150, 30))
-        self.btnQtMenu.setFont(fontMontserrat)
-        self.btnQtMenu.setStyleSheet(StyleSheethHelper.btnQtMenuStyleSheet_normal)
-        self.btnQtMenu.setIcon(QIcon("./static/images/menu.png"))
-        self.btnQtMenu.setObjectName("btnQtMenu")
+        self.btnQtMenu = MainButton(BackgroundForm, fontMontserrat)
         # endregion
-        # region Creating minimize button
-        self.btnMinimize = QPushButton(self.Form)
-        self.btnMinimize.setMaximumSize(QSize(15, 15))
-        self.btnMinimize.setStyleSheet(StyleSheethHelper.btnMinimizeStyleSheet_normal)
-        self.btnMinimize.setText("")
-        self.btnMinimize.setObjectName("btnMinimize")
-        # endregion
-        # region Creating maximize button
-        self.btnMaximize = QPushButton(self.Form)
-        self.btnMaximize.setMinimumSize(QSize(15, 15))
-        self.btnMaximize.setMaximumSize(QSize(15, 15))
-        self.btnMaximize.setStyleSheet(StyleSheethHelper.btnMaximizeStyleSheet_normal)
-        self.btnMaximize.setIcon(QIcon("./static/images/maximize.png"))
-        self.btnMaximize.setIconSize(QSize(15, 15))
-        self.btnMinimize.setIcon(QIcon("./static/images/minus.png"))
-        self.btnMinimize.setIconSize(QSize(15, 15))
-        self.btnMaximize.setText("")
-        self.btnMaximize.setObjectName("btnMaximize")
-        # endregion
-        # region Creating close button
-        self.btnClose = QPushButton(self.Form)
-        self.btnClose.setMinimumSize(QSize(15, 15))
-        self.btnClose.setMaximumSize(QSize(15, 15))
-        self.btnClose.setAccessibleDescription("")
-        self.btnClose.setStyleSheet(StyleSheethHelper.btnCloseStyleSheet_normal)
-        self.btnClose.setText("")
-        self.btnClose.setIcon(QIcon("./static/images/close.png"))
-        self.btnClose.setIconSize(QSize(15, 15))
-        self.btnClose.setObjectName("btnClose")
-        # endregion
+        self.btnGoBack = ActionButton(BackgroundForm, "", QIcon("./static/images/arrow-left.png"),
+                                      StyleSheethHelper.actionButtonStyleSheet_normal)
+        self.btnReload = ActionButton(BackgroundForm, "", QIcon("./static/images/arrow-left.png"),
+                                      StyleSheethHelper.actionButtonStyleSheet_normal)
+        self.searchButton = ActionButton(BackgroundForm, "", QIcon("./static/images/search.png"),
+                                         StyleSheethHelper.actionButtonStyleSheet_normal)
+        self.btnGoForward = ActionButton(BackgroundForm, "", QIcon("./static/images/arrow-right.png"),
+                                         StyleSheethHelper.actionButtonStyleSheet_normal)
+
+        self.btnMinimize = WindowButtonMinimize(BackgroundForm, "", QIcon("./static/images/minus.png"),
+                                                StyleSheethHelper.btnMinimizeStyleSheet_normal)
+        self.btnMaximize = WindowButtonMaximize(BackgroundForm, "", QIcon("./static/images/maximize.png"),
+                                                StyleSheethHelper.btnMaximizeStyleSheet_normal)
+        self.btnClose = WindowButtonClose(BackgroundForm, "", QIcon("./static/images/close.png"),
+                                          StyleSheethHelper.btnCloseStyleSheet_normal)
+        self.btnAddTab = ActionAddTabButton(BackgroundForm, "", QIcon("./static/images/add.png"),
+                                            StyleSheethHelper.actionButtonStyleSheet_normal)
         # region Creating search line
-        # region Creating search text field
-        self.searchField =  QLineEdit(self.Form)
+        self.searchField = QLineEdit(self.Form)
         self.searchField.setFixedHeight(30)
         self.searchField.setFont(fontMontserrat)
         self.searchField.setStyleSheet(StyleSheethHelper.searchFieldStyleSheet_normal)
         # endregion
-        # region Create search button
-        self.searchButton = QPushButton(self.Form)
-        self.searchButton.resize(30, 30)
-        self.searchButton.setStyleSheet(StyleSheethHelper.searchButtonStyleSheet_normal)
-        self.searchButton.setIcon(QIcon("./static/images/search.png"))
-        self.searchButton.setFixedSize(QSize(30, 30))
-        # endregion
-        # endregion
         # endregion
 
-        # region Creating Web View
-        self.webview = QWebEngineView(self.Form)
-        self.webview.setObjectName("webview")
-        self.webview.show()
-        # endregion
 
         # region Adding items to layouts
         self.backgroundFormLayout.addWidget(self.Form, 0, 0, 1, 1)
@@ -135,13 +117,19 @@ class Ui_BackgroundForm(object):
         self.formLayout.addLayout(self.searchLayout, 1, 0, 1, 1)
         self.formLayout.addWidget(self.webview, 2, 0, 1, 1)
         self.headerLayout.addWidget(self.btnQtMenu)
+        self.headerLayout.addLayout(self.tabsLayout)
+        self.headerLayout.addWidget(self.btnAddTab)
         self.headerLayout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
         self.headerLayout.addLayout(self.closeMinMaxLayout)
         self.closeMinMaxLayout.addWidget(self.btnMinimize)
         self.closeMinMaxLayout.addWidget(self.btnMaximize)
         self.closeMinMaxLayout.addWidget(self.btnClose)
+        self.searchLayout.addLayout(self.goBackForwardLayout)
         self.searchLayout.addWidget(self.searchField)
         self.searchLayout.addWidget(self.searchButton)
+        self.goBackForwardLayout.addWidget(self.btnGoBack)
+        self.goBackForwardLayout.addWidget(self.btnGoForward)
+        self.goBackForwardLayout.addWidget(self.btnReload)
         # endregion
 
         self.retranslateUi(BackgroundForm)
@@ -150,4 +138,3 @@ class Ui_BackgroundForm(object):
     def retranslateUi(self, BackgroundForm):
         _translate = QCoreApplication.translate
         BackgroundForm.setWindowTitle(_translate("BackgroundForm", "QtBrowser"))
-        self.btnQtMenu.setText(_translate("BackgroundForm", "QtBrowser"))
