@@ -7,6 +7,7 @@ from modules.ActionButton import ActionButton, ActionAddTabButton
 from modules.WindowButton import WindowButton, WindowButtonClose, WindowButtonMinimize, WindowButtonMaximize
 from modules.MainButton import MainButton
 from modules.HistoryWidget import HistoryWidget
+from modules.DownloadButton import DownloadButton
 import sqlite3
 
 
@@ -102,6 +103,7 @@ class Ui_BackgroundForm(object):
                                           StyleSheethHelper.btnCloseStyleSheet_normal)
         self.btnAddTab = ActionAddTabButton(BackgroundForm, "", QIcon("./static/images/add.png"),
                                             StyleSheethHelper.actionButtonStyleSheet_normal)
+        self.btnDownload = DownloadButton(BackgroundForm)
         # region Creating search line
         self.searchField = QLineEdit(self.Form)
         self.searchField.setFixedHeight(30)
@@ -119,6 +121,7 @@ class Ui_BackgroundForm(object):
         self.headerLayout.addWidget(self.btnQtMenu)
         self.headerLayout.addLayout(self.tabsLayout)
         self.headerLayout.addWidget(self.btnAddTab)
+        self.headerLayout.addWidget(self.btnDownload)
         self.headerLayout.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
         self.headerLayout.addLayout(self.closeMinMaxLayout)
         self.closeMinMaxLayout.addWidget(self.btnMinimize)
