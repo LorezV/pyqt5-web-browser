@@ -5,3 +5,4 @@ PyQt5-stubs==5.14.2.2
 pyqt5-tools==5.15.1.1.7.5
 PyQtWebEngine==5.15.1
 python-dotenv==0.15.0
+pytube==9.7.0
