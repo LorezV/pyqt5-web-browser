@@ -1,7 +1,5 @@
 from modules.ActionButton import ActionButton
 from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QIcon
-from modules import StyleSheethHelper
 
 
 class WindowButton(ActionButton):

@@ -23,7 +23,7 @@ class HistoryWidget(QWidget):
 
 
     def setupUi(self):
-        self.setMinimumSize(400, 600)
+        self.setMinimumSize(700, 500)
         self.setWindowTitle("История")
         self.setWindowIcon(QIcon("./static/images/reload.png"))
         self.btnClearHistory = QPushButton(self)
@@ -40,6 +40,7 @@ class HistoryWidget(QWidget):
             db = sqlite3.connect("qtbrowser.db")
             cur = db.cursor()
             cur.execute("DELETE FROM history")
+            db.commit()
             db.close()
         except Exception as e:
             print(e)
@@ -51,7 +52,7 @@ class HistoryWidget(QWidget):
     def add_item(self, title, url, time, date):
         item = HistoryListItem(self.listWidget, url)
         # if (len(title) > )
-        item.setText("\t".join([str(time)[:10] + ":", str(title)[:10], str(url)]))
+        item.setText("\t".join([str(time)[:10] + ":", str(title)[:20], str(url)]))
         self.listWidget.addItem(item)
         del item
 

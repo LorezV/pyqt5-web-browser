@@ -47,7 +47,7 @@ class Wnd(QWidget, Ui_BackgroundForm):
         self.webview.page().history().back()
 
     def goForward(self):
-        self.webview.page().webpage.history().forward()
+        self.webview.page().history().forward()
 
     def mouseMoveEvent(self, event):
         if self.is_pressed:
@@ -92,9 +92,12 @@ class Wnd(QWidget, Ui_BackgroundForm):
                 qurl = self.webview.url().url()
                 qtitle = self.webview.title()
                 try:
-                    self.cur.execute(
+                    db = sqlite3.connect("qtbrowser.db")
+                    cur = db.cursor()
+                    cur.execute(
                         f"""INSERT INTO history(title, url, date, time) VALUES ("{qtitle}", "{qurl}", "{qdate}", "{qtime}")""")
-                    self.db.commit()
+                    db.commit()
+                    db.close()
                 except Exception as e:
                     print(e)
                 self.historyWidget.add_item(qtitle, qurl, qtime, qdate)
